@@ -1,0 +1,71 @@
+{
+    "appKeys": {
+        "AppKeyConfigured": 0,
+        "AppKeyGeocaches": 6,
+        "AppKeyGetCaches": 1,
+        "AppKeyNumCaches": 7,
+        "AppKeyStartNav": 8,
+        "AppKeyStatusDesc": 2,
+        "AppKeyStatusError": 5,
+        "AppKeyStatusProgress": 3,
+        "AppKeyStatusStage": 4,
+        "AppKeyStopNav": 9
+    },
+    "capabilities": [
+        "location",
+        "configurable"
+    ],
+    "companyName": "grobinson.me",
+    "enableMultiJS": true,
+    "longName": "Geocaching",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/retry_icon.png",
+                "name": "IMAGE_RETRY_ICON",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/error.png",
+                "name": "IMAGE_ERROR_ICON",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/menu_icon.png",
+                "memoryFormat": "1Bit",
+                "menuIcon": true,
+                "name": "IMAGE_MENU_ICON",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/large_logo.png",
+                "name": "IMAGE_LARGE_LOGO",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            },
+            {
+                "file": "images/cloud_icon.png",
+                "memoryFormat": "1Bit",
+                "name": "IMAGE_CLOUD",
+                "targetPlatforms": null,
+                "type": "bitmap"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Geocaching",
+    "targetPlatforms": [
+        "aplite",
+        "basalt",
+        "chalk"
+    ],
+    "uuid": "a03e3b63-fad7-470d-99f5-c2c2633083c0",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
