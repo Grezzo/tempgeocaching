@@ -22,7 +22,7 @@ static void select_click_handler(struct MenuLayer *menu_layer, MenuIndex *cell_i
     show_status_window();
     send_message_with_int(AppKeyGetCaches, 0);
   } else {
-    show_cache_window(get_geocache(row - 1));
+    show_cache_window(row - 1);
   }
 }
 

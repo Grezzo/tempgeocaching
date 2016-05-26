@@ -5,6 +5,7 @@
 #include "start_window.h"
 #include "status_window.h"
 #include "error_window.h"
+#include "cache_window.h"
 
 void inbox_dropped_handler(AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "App Message dropped: %i", reason);
@@ -20,6 +21,9 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
   
   Tuple *geocaches_tuple = dict_find(iter, AppKeyGeocaches);
   Tuple *num_caches_tuple = dict_find(iter, AppKeyNumCaches);
+  
+  Tuple *distance_tuple = dict_find(iter, AppKeyDistance);
+  Tuple *bearing_tuple = dict_find(iter, AppKeyBearing);
   
   if (configured_tuple) {
     bool configured = configured_tuple->value->int16;
@@ -41,8 +45,6 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
     
   } else if(status_error_tuple) {
     char *error_description = status_error_tuple->value->cstring;
-    //show_error(status_description);
-    //NEED TO REMOVE ERROR FEATURES FROM STATUS WINDOW
     show_error_window(error_description);
     hide_start_window();
     hide_status_window();
@@ -56,6 +58,11 @@ void inbox_received_handler(DictionaryIterator *iter, void *context) {
     hide_start_window();
     hide_status_window();
     hide_error_window();
+    
+  } else if(distance_tuple) {
+    char *distance = distance_tuple->value->cstring;
+    int bearing = bearing_tuple->value->int32;
+    bearing_and_distance_handler(bearing, distance);
   }
 }
 

@@ -2,6 +2,7 @@
 
 module.exports.distanceAndBearing = distanceAndBearing;
 module.exports.distanceAsString = distanceAsString;
+module.exports.metresInMiles = metresInMiles;
 
 var trigMaxAngle = 65536; // Maximum angle for Pebble maths (basically 360 degrees)
 
@@ -62,4 +63,8 @@ function distanceAsString(metres, metric) {
       return (yards / yardsInMile).toFixed(2) + "mi";
     }
   }
+}
+
+function metresInMiles(miles) {
+  return miles * yardsInMile * metresInYard;
 }

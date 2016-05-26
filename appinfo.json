@@ -1,6 +1,8 @@
 {
     "appKeys": {
+        "AppKeyBearing": 11,
         "AppKeyConfigured": 0,
+        "AppKeyDistance": 10,
         "AppKeyGeocaches": 6,
         "AppKeyGetCaches": 1,
         "AppKeyNumCaches": 7,
@@ -17,7 +19,7 @@
     ],
     "companyName": "grobinson.me",
     "enableMultiJS": true,
-    "longName": "Geocaching",
+    "longName": "Geopebble",
     "projectType": "native",
     "resources": {
         "media": [
@@ -57,14 +59,14 @@
         ]
     },
     "sdkVersion": "3",
-    "shortName": "Geocaching",
+    "shortName": "Geopebble",
     "targetPlatforms": [
         "aplite",
         "basalt",
         "chalk"
     ],
-    "uuid": "a03e3b63-fad7-470d-99f5-c2c2633083c0",
-    "versionLabel": "1.0",
+    "uuid": "c3dc23e0-f895-46be-aaa8-682256535257",
+    "versionLabel": "0.4",
     "watchapp": {
         "watchface": false
     }

@@ -16,6 +16,9 @@ typedef enum {
   
   AppKeyStartNav,       // Sent by watch when cache window is loaded
   AppKeyStopNav,        // Sent by watch when cache window is unloaded
+  
+  AppKeyDistance,       // Sent by JS when navigating to geocache
+  AppKeyBearing,        // Sent by JS when navigating to geocache
 } AppKey;
 
 void inbox_dropped_handler(AppMessageResult reason, void *context);

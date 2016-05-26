@@ -13,6 +13,10 @@ static char s_description_buffer[50];
 static char s_stage_buffer[15];
 
 static void load_handler(Window* window) {
+  
+  s_description_buffer[0] = 0; //Clear buffer
+  s_stage_buffer[0] = 0; //Clear buffer
+  
   Layer *root_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(root_layer);
   
@@ -122,6 +126,6 @@ void update_status_window(char *description, int stage, int progress) {
   progress_layer_set_progress(s_progress_layer, progress);
   
   // Update stage
-  snprintf(s_stage_buffer, sizeof(s_stage_buffer), "Stage %i of 5", stage);
+  snprintf(s_stage_buffer, sizeof(s_stage_buffer), "Stage %i of 3", stage);
   layer_mark_dirty(text_layer_get_layer(s_stage_layer));
 }

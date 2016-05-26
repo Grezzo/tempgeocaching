@@ -14,6 +14,8 @@ int main(void) {
   // - Messages to watch will hopefully fit in 5500. It is maximum 100 caches,
   //     with sizes from geocaching.h, except the average name length will hopefully be less
   //     than 37 characters (incuding terminator). (6+12+37)*100=5500
+  
+  //I'VE HAD TO UP THIS BY 1000 OTHERWISE SERIALIZED CACHES ARE DROPPED - NOT SURE WHY YET..., and it's down again now
   app_message_open(5500, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
   
   app_event_loop();
