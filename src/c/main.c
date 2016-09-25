@@ -16,7 +16,9 @@ int main(void) {
   //     than 37 characters (incuding terminator). (6+12+37)*100=5500
   
   //I'VE HAD TO UP THIS BY 1000 OTHERWISE SERIALIZED CACHES ARE DROPPED - NOT SURE WHY YET..., and it's down again now
-  app_message_open(5500, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
+  //halved because api only returns 50
+  // AND BACK UP AGAIN by 250!!!
+  app_message_open(3000, APP_MESSAGE_OUTBOX_SIZE_MINIMUM);
   
   app_event_loop();
   

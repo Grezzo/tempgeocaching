@@ -1,0 +1,77 @@
+{
+    "author": "grobinson.me",
+    "dependencies": {},
+    "keywords": [],
+    "name": "watch-caching",
+    "pebble": {
+        "capabilities": [
+            "location",
+            "configurable"
+        ],
+        "displayName": "Watch Caching",
+        "enableMultiJS": true,
+        "messageKeys": {
+            "AppKeyBearing": 11,
+            "AppKeyConfigured": 0,
+            "AppKeyDistance": 10,
+            "AppKeyGeocaches": 6,
+            "AppKeyGetCaches": 1,
+            "AppKeyNumCaches": 7,
+            "AppKeyStartNav": 8,
+            "AppKeyStatusDesc": 2,
+            "AppKeyStatusError": 5,
+            "AppKeyStatusProgress": 3,
+            "AppKeyStatusStage": 4,
+            "AppKeyStopNav": 9
+        },
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/retry_icon.png",
+                    "name": "IMAGE_RETRY_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/error.png",
+                    "name": "IMAGE_ERROR_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/menu_icon.png",
+                    "memoryFormat": "1Bit",
+                    "menuIcon": true,
+                    "name": "IMAGE_MENU_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/large_logo.png",
+                    "name": "IMAGE_LARGE_LOGO",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/cloud_icon.png",
+                    "memoryFormat": "1Bit",
+                    "name": "IMAGE_CLOUD",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk"
+        ],
+        "uuid": "905612e5-7117-4e8b-9872-1be09956e187",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "1.3.0"
+}

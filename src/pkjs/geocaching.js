@@ -1,5 +1,11 @@
 /*TODO:
+Exclude non-available geocaches - NEW FEATURE; DONE!
+filter owned
+hint
+skip waiting
+log find
 New feature: Now uses corrected coords!
+New feature: Now displays date in status bar!
 change buffers as only 50 geocaches now
 date in status bar
 location watcher gets stuck? sense and restart?
@@ -35,7 +41,7 @@ Get rid of start window (only really need status window)
 
 /*globals require, module*/ //Stop complaining about require and modules being undefined
 
-var config = require('config');
+var config = require('./config.js');
 
 module.exports.getGeocaches = getGeocaches;
 module.exports.loadCaches = loadCaches;
@@ -43,7 +49,7 @@ module.exports.startNav = startNav;
 module.exports.stopNav = stopNav;
 
 // var base64 = require('base64_encode');
-var location = require('location');
+var location = require('./location.js');
 
 var timeout = 30000;
 
@@ -72,7 +78,7 @@ function loadCaches() {
 }
 
 function getGeocaches() {
-  var accuracy = 50;
+  var accuracy = 60; // got a report of it not getting any more accurate than 55yds, so 60m should be safe
   // Emulator never gets more accurate than 1000, so lower accuracy
   if ((Pebble.getActiveWatchInfo().model.indexOf("qemu_platform_") != -1)) {
     console.log('Detected emulator in use, decreasing GPS accuracy');
@@ -106,6 +112,8 @@ function getGeocaches() {
         console.log("Location accuracy (" + position.coords.accuracy + "m) is good");
         lat = position.coords.latitude;
         lng = position.coords.longitude;
+        lat = 51.3593833333333;
+        lng = -1.16663333333333;
         console.log("Searching at coords: " + lat, lng);
         if (config.getConfig("show_found")){
           getCachesUsingAPI();
@@ -469,6 +477,7 @@ function getCachesUsingAPI(username) {
     MaxPerPage: 50,
     GeocacheLogCount: 0,
     TrackableLogCount: 0,
+    GeocacheExclusions:{Available:true},
     PointRadius:{ 
       DistanceInMeters: radius,
       Point:{
@@ -480,6 +489,7 @@ function getCachesUsingAPI(username) {
   };
   if (username) {
     body.NotFoundByUsers = {UserNames: [username]};
+    body.NotHiddenByUsers = {UserNames: [username]};
   }
   xhr.send(JSON.stringify(body));
 }
@@ -493,7 +503,7 @@ function parseJSONObject(JSONObject) {
   // Reset geocaches array
   geocaches = [];
   var sentPercent = 0;
-  //console.log(JSON.stringify(JSONObject, null, 2));
+  console.log(JSON.stringify(JSONObject, null, 2));
   JSONObject.forEach(function(geocache, index) {
     //console.log(geocache.Code);
     var percentComplete = Math.round((index / JSONObject.length) * 10) * 10;

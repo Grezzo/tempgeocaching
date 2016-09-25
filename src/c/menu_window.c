@@ -5,14 +5,20 @@
 #include "status_window.h"
 #include "error_window.h"
 #include "cache_window.h"
+#include "datetime_layer.h"
 
 #define TITLE_FONT FONT_KEY_GOTHIC_24_BOLD
 #define SUBTITLE_FONT FONT_KEY_GOTHIC_18
 
 static Window *s_window;
-static StatusBarLayer *s_status_bar_layer;
+// static StatusBarLayer *s_status_bar_layer;
+static DateTimeLayer *s_datetime_layer;
 static MenuLayer *s_menu_layer;
 static GBitmap *s_cloud_bitmap;
+
+static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+  layer_mark_dirty(s_datetime_layer);
+}
 
 static void select_click_handler(struct MenuLayer *menu_layer, MenuIndex *cell_index, void *callback_context) {
   int row = cell_index->row;
@@ -107,9 +113,22 @@ static void load_handler(Window *window) {
   s_cloud_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CLOUD);
   
   // Status Bar
-  s_status_bar_layer = status_bar_layer_create();
-  layer_add_child(root_layer, status_bar_layer_get_layer(s_status_bar_layer));
-  
+//   s_status_bar_layer = status_bar_layer_create();
+//   layer_add_child(root_layer, status_bar_layer_get_layer(s_status_bar_layer));
+  s_datetime_layer = datetime_layer_create(
+    GRect(
+      bounds.origin.x,
+      bounds.origin.y,
+      bounds.size.w,
+      STATUS_BAR_LAYER_HEIGHT
+    ),
+    PBL_IF_COLOR_ELSE(GColorDarkGreen, GColorBlack),
+    GColorWhite,
+    PBL_IF_COLOR_ELSE(true, false)
+  );
+  layer_add_child(root_layer, s_datetime_layer);
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+
   // Menu Layer
   s_menu_layer = menu_layer_create(GRect(bounds.origin.x,
                                         bounds.origin.y + STATUS_BAR_LAYER_HEIGHT,
@@ -128,8 +147,8 @@ static void load_handler(Window *window) {
   
   #if defined(PBL_COLOR)
   window_set_background_color(window, GColorDarkGreen);
-  status_bar_layer_set_colors(s_status_bar_layer, GColorClear, GColorWhite);
-  status_bar_layer_set_separator_mode(s_status_bar_layer, StatusBarLayerSeparatorModeDotted);
+//   status_bar_layer_set_colors(s_status_bar_layer, GColorClear, GColorWhite);
+//   status_bar_layer_set_separator_mode(s_status_bar_layer, StatusBarLayerSeparatorModeDotted);
   menu_layer_set_normal_colors(s_menu_layer, GColorDarkGreen, GColorWhite);
   menu_layer_set_highlight_colors(s_menu_layer, GColorKellyGreen, GColorWhite);
   #endif
@@ -138,7 +157,9 @@ static void load_handler(Window *window) {
 static void unload_handler(Window *window) {
   gbitmap_destroy(s_cloud_bitmap);
   menu_layer_destroy(s_menu_layer);
-  status_bar_layer_destroy(s_status_bar_layer);
+//   status_bar_layer_destroy(s_status_bar_layer);
+  tick_timer_service_unsubscribe();
+  datetime_layer_destroy(s_datetime_layer);
 }
 
 void show_menu_window(void) {

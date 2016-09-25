@@ -1,7 +1,7 @@
 /*globals require*/ //Stop complaining about require being undefined!
 
-var gc = require('geocaching');
-var config = require('config');
+var gc = require('./geocaching.js');
+var config = require('./config.js');
 
 Pebble.addEventListener('showConfiguration', config.showConfigWindow);
 Pebble.addEventListener('webviewclosed', config.processConfig);

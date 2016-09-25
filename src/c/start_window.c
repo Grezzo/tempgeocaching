@@ -1,19 +1,38 @@
 #include <pebble.h>
 #include "start_window.h"
+#include "datetime_layer.h"
 
 static Window *s_window;
-static StatusBarLayer * s_status_bar_layer;
+// static StatusBarLayer * s_status_bar_layer;
+static DateTimeLayer *s_datetime_layer;
 static GBitmap *s_geocache_bitmap;
 static BitmapLayer *s_bitmap_layer;
 static TextLayer *s_text_layer;
+
+static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+  layer_mark_dirty(s_datetime_layer);
+}
 
 static void load_handler(Window* window) {
   Layer *root_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(root_layer);
   
-  // Status Bar
-  s_status_bar_layer = status_bar_layer_create();
-  layer_add_child(root_layer, status_bar_layer_get_layer(s_status_bar_layer));
+//   // Status Bar
+//   s_status_bar_layer = status_bar_layer_create();
+//   layer_add_child(root_layer, status_bar_layer_get_layer(s_status_bar_layer));
+  s_datetime_layer = datetime_layer_create(
+    GRect(
+      bounds.origin.x,
+      bounds.origin.y,
+      bounds.size.w,
+      STATUS_BAR_LAYER_HEIGHT
+    ),
+    PBL_IF_COLOR_ELSE(GColorDarkGreen, GColorBlack),
+    GColorWhite,
+    PBL_IF_COLOR_ELSE(true, false)
+  );
+  layer_add_child(root_layer, s_datetime_layer);
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 
   // Bitmap Layer
   s_bitmap_layer = bitmap_layer_create(GRect(
@@ -42,15 +61,17 @@ static void load_handler(Window* window) {
   
   #if defined(PBL_COLOR)
   window_set_background_color(window, GColorDarkGreen);
-  status_bar_layer_set_colors(s_status_bar_layer, GColorClear, GColorWhite);
-  status_bar_layer_set_separator_mode(s_status_bar_layer, StatusBarLayerSeparatorModeDotted);
+//   status_bar_layer_set_colors(s_status_bar_layer, GColorClear, GColorWhite);
+//   status_bar_layer_set_separator_mode(s_status_bar_layer, StatusBarLayerSeparatorModeDotted);
   text_layer_set_background_color(s_text_layer, GColorClear);
   text_layer_set_text_color(s_text_layer, GColorWhite);
   #endif
 }
 
 static void unload_handler(Window* window) {
-  status_bar_layer_destroy(s_status_bar_layer);
+//   status_bar_layer_destroy(s_status_bar_layer);
+  tick_timer_service_unsubscribe();
+  datetime_layer_destroy(s_datetime_layer);
   gbitmap_destroy(s_geocache_bitmap);
   bitmap_layer_destroy(s_bitmap_layer);
   text_layer_destroy(s_text_layer);

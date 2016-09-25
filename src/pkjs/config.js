@@ -1,5 +1,5 @@
 /*globals require, module*/ //Stop complaining about require and module being undefined!
-var gc = require('geocaching');
+var gc = require('./geocaching.js');
 
 module.exports.showConfigWindow = showConfigWindow;
 module.exports.processConfig = processConfig;
@@ -148,7 +148,7 @@ A lower search radius will mean marginally faster searching (especially on a slo
 <td>Search Radius (<span id=\"units\">" + (metric ? "km" : "mi") + "</span>)</td>\n\
 <td><input type=\"text\" id=\"search_radius\" value=\"" + search_radius + "\"></td>\n\
 </tr><tr>\n\
-<td>Show Found Caches</td>\n\
+<td>Show Found/Hidden</td>\n\
 <td><input type=\"checkbox\" id=\"show_found\"" + (show_found ? " checked" : "") + "></td>\n\
 </tr><tr>\n\
 <td>Metric</td>\n\

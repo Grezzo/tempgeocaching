@@ -2,6 +2,7 @@
 #include "cache_window.h"
 #include "app_message.h"
 #include "arrow_layer.h"
+#include "datetime_layer.h"
 
 static int s_cache_index;
 static CompassHeading s_compass_heading;
@@ -12,10 +13,15 @@ static bool s_has_heading;
 static bool s_has_bearing;
 
 static Window *s_window;
-static StatusBarLayer *s_status_bar_layer;
+// static StatusBarLayer *s_status_bar_layer;
+static DateTimeLayer *s_datetime_layer;
 static ArrowLayer *s_arrow_layer;
 static TextLayer *s_calibration_layer;
 static TextLayer *s_distance_layer;
+
+static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+  layer_mark_dirty(s_datetime_layer);
+}
 
 static void update_arrow() {
   int direction = (s_bearing + s_compass_heading) % TRIG_MAX_ANGLE;
@@ -56,20 +62,39 @@ static void compass_heading_handler(CompassHeadingData heading) {
   }
 }
 
+//Accelerometor dummy handler to work around the compass bug in the v4 firmware
+static void accel_data_handler(AccelData *data, uint32_t num_samples) { /* do nothing */}
+
 static void load_handler(Window* window) {
   
   s_has_heading = false;
   s_has_bearing = false;
   
   send_message_with_int(AppKeyStartNav, s_cache_index);
+  //subscribe to accelerometer to work around the compass bug in the v4 firmware
+  accel_data_service_subscribe(0, accel_data_handler);
   compass_service_subscribe(compass_heading_handler);
+
   
   Layer *root_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(root_layer);
 
   // Status Bar
-  s_status_bar_layer = status_bar_layer_create();
-  layer_add_child(root_layer, status_bar_layer_get_layer(s_status_bar_layer));
+//   s_status_bar_layer = status_bar_layer_create();
+//   layer_add_child(root_layer, status_bar_layer_get_layer(s_status_bar_layer));
+  s_datetime_layer = datetime_layer_create(
+    GRect(
+      bounds.origin.x,
+      bounds.origin.y,
+      bounds.size.w,
+      STATUS_BAR_LAYER_HEIGHT
+    ),
+    PBL_IF_COLOR_ELSE(GColorDarkGreen, GColorBlack),
+    GColorWhite,
+    PBL_IF_COLOR_ELSE(true, false)
+  );
+  layer_add_child(root_layer, s_datetime_layer);
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
   
   GRect middle_rect = GRect(
       bounds.origin.x,
@@ -112,8 +137,8 @@ static void load_handler(Window* window) {
 
   #if defined(PBL_COLOR)
   window_set_background_color(window, GColorDarkGreen);
-  status_bar_layer_set_colors(s_status_bar_layer, GColorClear, GColorWhite);
-  status_bar_layer_set_separator_mode(s_status_bar_layer, StatusBarLayerSeparatorModeDotted);
+//   status_bar_layer_set_colors(s_status_bar_layer, GColorClear, GColorWhite);
+//   status_bar_layer_set_separator_mode(s_status_bar_layer, StatusBarLayerSeparatorModeDotted);
   arrow_layer_set_color(s_arrow_layer, GColorWhite);
   text_layer_set_background_color(s_calibration_layer, GColorClear);
   text_layer_set_text_color(s_calibration_layer, GColorWhite);
@@ -125,7 +150,9 @@ static void load_handler(Window* window) {
 static void unload_handler(Window* window) {
   send_message_with_int(AppKeyStopNav, 0);
   compass_service_unsubscribe();
-  status_bar_layer_destroy(s_status_bar_layer);
+//   status_bar_layer_destroy(s_status_bar_layer);
+  tick_timer_service_unsubscribe();
+  datetime_layer_destroy(s_datetime_layer);
   arrow_layer_destroy(s_arrow_layer);
   text_layer_destroy(s_calibration_layer);
   text_layer_destroy(s_distance_layer);
